@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>Eko Email Signature Generator</title>
+	<!-- Include Vue.js from a CDN -->
+	<script src="https://unpkg.com/vue@3"></script>
+	<!-- External CSS files in styles directory -->
+	<link rel="stylesheet" href="styles/main.css">
+	<link rel="stylesheet" href="styles/signature.css">
+</head>
+<body>
+	<div class="container">
+		<div id="app">
+			<h2>Eko Email Signature Generator</h2>
+			<p class="headermsg">Fill in your personal details below to generate your email signature:</p>
+			<form @submit.prevent>
+				<form-input
+					label="Name:"
+					id="name"
+					v-model="formData.name"
+					placeholder="e.g. Kumar Abhishek"
+					minlength="5"
+					maxlength="40">
+				</form-input>
+
+				<form-input
+					label="Designation:"
+					id="designation"
+					v-model="formData.designation"
+					placeholder="e.g. Product Head"
+					minlength="3"
+					maxlength="40">
+					<label class="inlinecheckbox" style="white-space: nowrap;">
+						<input type="checkbox" style="width:min-content;margin: 0 1em;" v-model="formData.showCompanyName">
+						| {{ companyDetails.shortName }}
+					</label>
+				</form-input>
+
+				<form-input
+					label="Phone:"
+					id="phone"
+					v-model="formData.phone"
+					type="number"
+					inputmode="tel"
+					min="5000000000"
+					minlength="10"
+					maxlength="10"
+					placeholder="e.g. 9876543210">
+				</form-input>
+
+				<link-input
+					label="Extra Link 1:"
+					id="link1"
+					v-model:url="formData.link1.url"
+					v-model:label="formData.link1.label"
+					v-model:urltext="formData.link1.urltext"
+					url-placeholder="URL e.g. https://abhi.page"
+					label-placeholder="Label e.g. My Blog">
+				</link-input>
+
+				<link-input
+					label="Extra Link 2:"
+					id="link2"
+					v-model:url="formData.link2.url"
+					v-model:label="formData.link2.label"
+					v-model:urltext="formData.link2.urltext"
+					url-placeholder="URL e.g. https://fb.com/..."
+					label-placeholder="Label e.g. Connect with Me">
+				</link-input>
+
+				<link-input
+					label="Extra Link 3:"
+					id="link3"
+					v-model:url="formData.link3.url"
+					v-model:label="formData.link3.label"
+					v-model:urltext="formData.link3.urltext"
+					url-placeholder="URL e.g. https://calendar.google...."
+					label-placeholder="Label e.g. Schedule Meeting with Me">
+				</link-input>
+
+				<!-- Form buttons -->
+				<div class="form-buttons">
+					<!-- <button type="button" @click="generateSignature">
+						Generate Signature
+					</button> -->
+					<button type="button" @click="resetForm" class="reset-button">
+						Reset Form
+					</button>
+					<button type="button" @click="showDummySignature" class="dummy-button">
+						See Sample Signature
+					</button>
+				</div>
+			</form>
+
+			<br>
+			<h4>Copy Signature inside this box:</h4>
+			<div id="signaturePreview" v-html="signatureHTML"></div>
+
+			<br><br>
+			<h2>How to Use this Signature Generator?</h2>
+			<p class="headermsg">Follow the instructions below to create your email signature:</p>
+			<ol>
+				<li>Fill in your personal details in the form above.</li>
+				<li>Copy the signature inside the above box.</li>
+				<li>Open Gmail and go to <a href="https://mail.google.com/mail/u/0/#settings/general" target="_blank">Settings</a>.</li>
+				<li>Scroll down to the "Signature" section.</li>
+				<li>Click on "Create New" and paste the copied signature into the editor.</li>
+				<li>Adjust the formatting if necessary.</li>
+				<li>Click "Save Changes" at the bottom of the page.</li>
+				<li>Your new email signature is now ready to use!</li>
+			</ol>
+
+			<div class="footer">
+				<div class="links">
+					<a href="https://github.com/ekoindia/email-signature/fork" target="_blank">Fork this Project on GitHub</a>
+				</div>
+				<p class="legal-notice"><strong>Legal Notice: </strong>This email signature generator is intended for use by employees of {{ companyDetails.name }}
+					only. Unauthorized use is prohibited.</p>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		// Company details configuration
+		const companyDetails = {
+			name: "Eko India Financial Services Pvt. Ltd.",
+			shortName: "Eko.in",
+			website: "https://eko.in",
+			// websiteLabel: "",
+			urls: [
+				// { url: "https://developers.eko.in", label: "Eko API" }
+			],
+			logo_url: "assets/logo.svg",
+			logo_alt: "Eko Logo",
+			logo_height: "40px",
+			linkedin: "https://www.linkedin.com/company/eko-india",
+			twitter: "https://x.com/ekospeaks",
+			facebook: "https://www.facebook.com/ekoindia",
+			disclaimer: "If you have received this email in error, please delete it and let me know, just so that we are all on the legal side! Thanks!",
+		};
+
+		// Utility functions
+		const utils = {
+			validateName(name) {
+				return name.trim() || 'Your Name';
+			},
+
+			validateDesignation(designation) {
+				const trimmed = designation.trim();
+				return trimmed.length >= 3 ? trimmed : '';
+			},
+
+			validatePhone(phone) {
+				const phoneClean = phone.replace(/\D/g, '');
+				return phoneClean.length >= 10 ? phone.trim() : '';
+			},
+
+			formatPhone(phone) {
+				// Return empty if the phone is not valid
+				const phoneClean = phone.replace(/\D/g, '');
+				if (phoneClean.length < 10) return '';
+
+				// Format as +91 ### ### ####
+				// Get last 10 digits in case there are more
+				const lastTen = phoneClean.slice(-10);
+				const part1 = lastTen.substring(0, 3);
+				const part2 = lastTen.substring(3, 6);
+				const part3 = lastTen.substring(6, 10);
+
+				return `+91 ${part1} ${part2} ${part3}`;
+			},
+
+			formatLink(link) {
+				if (!link) return '';
+				if (!link.url) return '';
+				const linkText = (link.urltext || link.label || link.url || "").trim();
+				return `<a href="${link.url.trim()}" target="_blank">${linkText}</a>`;
+			}
+		};
+
+		// Form input component
+		const FormInput = {
+			props: {
+				label: String,
+				id: String,
+				modelValue: String,
+				type: { type: String, default: 'text' },
+				placeholder: String,
+				minlength: String,
+				maxlength: String,
+				min: String,
+				inputmode: String
+			},
+			template: `
+				<div class="form-row">
+					<label :for="id">{{ label }}</label>
+					<input
+						:type="type"
+						:id="id"
+						:value="modelValue"
+						@input="$emit('update:modelValue', $event.target.value)"
+						:placeholder="placeholder"
+						:minlength="minlength"
+						:maxlength="maxlength"
+						:min="min"
+						:inputmode="inputmode"
+					/>
+					<slot></slot>
+				</div>
+			`
+		};
+
+		// Link input component (with URL and label)
+		const LinkInput = {
+			props: {
+				label: String,
+				id: String,
+				url: String,
+				urltext: String,
+				urlPlaceholder: String,
+				labelPlaceholder: String
+			},
+			template: `
+				<div class="form-row">
+					<label :for="id + 'Url'">{{ label }}</label>
+					<input
+						type="text"
+						:id="id + 'Url'"
+						:value="url"
+						@input="$emit('update:url', $event.target.value)"
+						:placeholder="urlPlaceholder"
+						style="width: 200px; margin-right: 5px;"
+					/>
+					<input
+						type="text"
+						:id="id + 'Label'"
+						:value="urltext"
+						@input="$emit('update:urltext', $event.target.value)"
+						:placeholder="labelPlaceholder"
+						style="width: 180px;"
+					/>
+				</div>
+			`
+		};
+
+		const app = Vue.createApp({
+			components: {
+				'form-input': FormInput,
+				'link-input': LinkInput
+			},
+			data() {
+				return {
+					formData: {
+						name: '',
+						designation: '',
+						phone: '',
+						link1: { url: '', urltext: '' },
+						link2: { url: '', urltext: '' },
+						link3: { url: '', urltext: '' },
+						showCompanyName: true // Default to checked
+					},
+					signatureHTML: '',
+					companyDetails: companyDetails // Make available to template
+				}
+			},
+			watch: {
+				formData: {
+					handler() {
+						this.debouncedGenerateSignature();
+					},
+					deep: true
+				}
+			},
+			methods: {
+				generateSignature() {
+					// Process basic fields
+					const name = utils.validateName(this.formData.name);
+					const validatedDesignation = utils.validateDesignation(this.formData.designation);
+					const validatedPhone = utils.validatePhone(this.formData.phone);
+					const formattedPhone = utils.formatPhone(this.formData.phone);
+
+					// Build conditional HTML blocks
+					const designationHTML = validatedDesignation ?
+						`<div class="signature-designation">${validatedDesignation}${this.formData.showCompanyName ? `<span>&nbsp;&nbsp;|&nbsp;&nbsp;${companyDetails.shortName}</span>` : ''}</div>` : '';
+
+					// Build links HTML
+					let linksHTML = "";
+
+					if (validatedPhone) {
+						linksHTML += `<a href="tel:+91${this.formData.phone}" style="text-decoration:none">${formattedPhone}</a>`;
+					}
+
+					// Process extra links
+					const links = [
+						this.formData.link1,
+						this.formData.link2,
+						this.formData.link3,
+						{ url: companyDetails.website, label: companyDetails.websiteLabel },
+						...companyDetails.urls,
+					];
+					links.forEach(link => {
+						const formattedLink = utils.formatLink(link);
+						if (formattedLink) {
+							linksHTML += (linksHTML ? '<span class="divider">|</span>' : '') + formattedLink;
+						}
+					});
+
+					// Build company social links
+					let socialLinksHTML = '';
+					if (companyDetails.facebook) {
+						socialLinksHTML += `<a href="${companyDetails.facebook}" target="_blank" class="social-link"><img src="assets/fb.svg" alt="Link to Facebook"/></a>`;
+					}
+					if (companyDetails.twitter) {
+						socialLinksHTML += `<a href="${companyDetails.twitter}" target="_blank" class="social-link"><img src="assets/x.svg" alt="Link to Twitter"/></a>`;
+					}
+					if (companyDetails.linkedin) {
+						socialLinksHTML += `<a href="${companyDetails.linkedin}" target="_blank" class="social-link"><img src="assets/linkedin.svg" alt="Link to LinkedIn"/></a>`;
+					}
+
+					// Assemble the final signature
+					// MARK: Signature HTML
+					this.signatureHTML = `
+						<div class="signature-container">
+							<br>
+							Regards,
+							<br/><br/>
+							<div class="toprow">
+								<div class="mybox">
+									<div class="signature-name">${name}</div>
+									${designationHTML}
+								</div>
+								<div class="companybox">
+									<a href="${companyDetails.website}" target="_blank">
+										<img src="${companyDetails.logo_url}" alt="${companyDetails.logo_alt}" style="height: ${companyDetails.logo_height}; width: auto;">
+									</a>
+								</div>
+							</div>
+							<div class="linksrow">
+								<div class="signature-links">${linksHTML}</div>
+								<div class="socialicons">
+									${socialLinksHTML}
+								</div>
+							</div>
+							<div class="signature-company">${companyDetails.name}</div>
+							<div class="signature-disclaimer">
+								${companyDetails.disclaimer}
+							</div>
+						</div>
+					`;
+				},
+				// Add debounced version of generate signature
+				debouncedGenerateSignature() {
+					clearTimeout(this._debounceTimer);
+					this._debounceTimer = setTimeout(() => {
+						this.generateSignature();
+					}, 200);	// 200ms debounce time
+				},
+				resetForm() {
+					this.formData = {
+						name: '',
+						designation: '',
+						phone: '',
+						link1: { url: '', urltext: '' },
+						link2: { url: '', urltext: '' },
+						link3: { url: '', urltext: '' },
+						showCompanyName: true // Reset to default checked
+					};
+					this.signatureHTML = '';
+					if (this.$refs.name) {
+						this.$refs.name.focus();
+					}
+				},
+				showDummySignature() {
+					this.formData = {
+						name: 'John Doe',
+						designation: 'CXO',
+						phone: '9876543210',
+						link1: { url: 'https://johndoeblog.com', urltext: 'My Blog' },
+						link2: { url: 'https://linkedin.com/in/johndoe', urltext: 'Connect with Me' },
+						link3: { url: '', urltext: '' },
+						showCompanyName: true // Default to checked
+					};
+					this.generateSignature(); // Call to generate signature after setting dummy data
+				}
+			},
+			created() {
+				// Initialize debounce timer
+				this._debounceTimer = null;
+			},
+			mounted() {
+				// Generate initial signature
+				this.generateSignature();
+			}
+		});
+
+		app.mount('#app');
+	</script>
+</body>
+</html>

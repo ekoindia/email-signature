@@ -1,0 +1,106 @@
+body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  line-height: 1.4;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.container {
+  max-width: 800px;
+  width: 100%;
+  padding: 0 20px;
+}
+
+h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.headermsg {
+  font-size: 0.9em;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+form {
+  margin-bottom: 20px;
+}
+
+label {
+  display: inline-block;
+  width: 100px;
+  margin-right: 10px;
+  font-weight: 600;
+}
+
+label.inlinecheckbox {
+  display: inline-flex;
+  font-weight: normal;
+  font-size: 0.9em;
+}
+
+input {
+  padding: 5px;
+  margin-bottom: 10px;
+  width: 200px;
+}
+
+.form-row {
+  margin-bottom: 8px;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 10px;
+  gap: 10px;
+}
+
+button {
+  padding: 8px 16px;
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+#signaturePreview {
+  border: 1px solid #ccc;
+  padding: 15px;
+  max-width: 700px;
+}
+
+
+.footer {
+  font-size: 0.8em;
+  padding-top: 1em;
+  border-top: 1px solid #ccc;
+  max-width: 95%;
+  margin: 4em auto 0 auto;
+}
+
+.footer > .links {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.footer > .links > a {
+  color: #666;
+  text-decoration: none;
+  margin-right: 1em;
+}
+
+.legal-notice {
+  font-size: 0.9em;
+  color: #666;
+  margin-top: 20px;
+}

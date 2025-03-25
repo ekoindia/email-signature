@@ -1,0 +1,100 @@
+/* Signature styling */
+
+:root {
+  --primary-color: #ffb218;
+}
+
+.signature-container {
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
+  color: #333;
+  line-height: 1.4;
+}
+
+.toprow {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 1em;
+	/* margin-bottom: 10px; */
+	padding-bottom: 12px;
+	margin-bottom: 12px;
+	border-bottom: 2px solid #ffb218;
+}
+
+.mybox {
+	flex: 1;
+}
+
+/* .companybox {
+	padding: 5px 1em;
+	border-left: 2px solid #ffb218;
+} */
+
+.signature-name {
+  font-weight: bold;
+  font-size: 1.3em;
+  color: #ffb218;
+}
+
+.signature-designation {
+  /* font-size: 1.1em; */
+  font-weight: bold;
+  color: #888;
+}
+
+.signature-designation > span {
+	font-weight: 300;
+  	color: #999;
+}
+
+.linksrow {
+	margin-bottom: 12px;
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	gap: 1em;
+	flex-wrap: wrap;
+}
+
+.signature-links {
+	flex: 1;
+}
+
+.signature-links > * {
+	font-size: 0.8em;
+	color: #666;
+	/* text-decoration: none; */
+}
+
+.signature-links .divider {
+  margin: 0 0.6em;
+}
+
+.signature-links a:hover {
+  text-decoration: underline;
+}
+
+.socialicons {
+	display: flex;
+	flex-direction: row;
+	gap: 0.8em;
+}
+
+.socialicons img {
+	width: 20px;
+	height: 20px;
+	color: #ffb218;
+}
+
+.signature-disclaimer {
+  font-size: 8px;
+  color: #999;
+  margin: 10px 0;
+}
+
+.signature-company {
+  font-size: 14px;
+  font-weight: 500;
+  color: #888;
+}
