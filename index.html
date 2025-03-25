@@ -131,7 +131,7 @@
 			urls: [
 				// { url: "https://developers.eko.in", label: "Eko API" }
 			],
-			logo_url: "https://ekoindia.github.io/email-signature/assets/logo.svg",
+			logo_url: "https://ekoindia.github.io/email-signature/assets/logo.png",
 			logo_alt: "Eko Logo",
 			logo_height: "40px",
 			linkedin: "https://www.linkedin.com/company/eko-india",
@@ -309,13 +309,13 @@
 					// Build company social links
 					let socialLinksHTML = '';
 					if (companyDetails.facebook) {
-						socialLinksHTML += `<a href="${companyDetails.facebook}" target="_blank" class="social-link"><img src="https://ekoindia.github.io/email-signature/assets/fb.svg" alt="Link to Facebook"/></a>`;
+						socialLinksHTML += `<a href="${companyDetails.facebook}" target="_blank" class="social-link"><img src="https://ekoindia.github.io/email-signature/assets/fb.png" alt="Link to Facebook"/></a>`;
 					}
 					if (companyDetails.twitter) {
 						socialLinksHTML += `<a href="${companyDetails.twitter}" target="_blank" class="social-link"><img src="https://ekoindia.github.io/email-signature/assets/x.svg" alt="Link to Twitter"/></a>`;
 					}
 					if (companyDetails.linkedin) {
-						socialLinksHTML += `<a href="${companyDetails.linkedin}" target="_blank" class="social-link"><img src="https://ekoindia.github.io/email-signature/assets/linkedin.svg" alt="Link to LinkedIn"/></a>`;
+						socialLinksHTML += `<a href="${companyDetails.linkedin}" target="_blank" class="social-link"><img src="https://ekoindia.github.io/email-signature/assets/linkedin.png" alt="Link to LinkedIn"/></a>`;
 					}
 
 					// Assemble the final signature
@@ -325,23 +325,31 @@
 							<br>
 							Regards,
 							<br/><br/>
-							<div class="toprow">
-								<div class="mybox">
-									<div class="signature-name">${name}</div>
-									${designationHTML}
-								</div>
-								<div class="companybox">
-									<a href="${companyDetails.website}" target="_blank">
-										<img src="${companyDetails.logo_url}" alt="${companyDetails.logo_alt}" style="height: ${companyDetails.logo_height}; width: auto;">
-									</a>
-								</div>
-							</div>
-							<div class="linksrow">
-								<div class="signature-links">${linksHTML}</div>
-								<div class="socialicons">
-									${socialLinksHTML}
-								</div>
-							</div>
+							<table cellspacing="0" cellpadding="0" border="0" class="toprow">
+								<tr>
+									<td class="mybox">
+										<div class="signature-name">${name}</div>
+										${designationHTML}
+									</td>
+									<td width="20">&nbsp;</td>
+									<td class="companybox" valign="middle" align="right">
+										<a href="${companyDetails.website}" target="_blank">
+											<img src="${companyDetails.logo_url}" alt="${companyDetails.logo_alt}" style="height: ${companyDetails.logo_height}; width: auto;">
+										</a>
+									</td>
+								</tr>
+							</table>
+							<table cellspacing="0" cellpadding="0" border="0" class="linksrow">
+								<tr>
+									<td class="signature-links" valign="top" align="left">
+										${linksHTML}
+									</td>
+									<td width="20">&nbsp;</td>
+									<td class="socialicons" valign="top" align="right">
+										${socialLinksHTML}
+									</td>
+								</tr>
+							</table>
 							<div class="signature-company">${companyDetails.name}</div>
 							<div class="signature-disclaimer">
 								${companyDetails.disclaimer}
